@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+   <title> Syllabus to Google Tasks</title>
+</head>
+<body>
+    <h1>Syllabus to Google Tasks</h1>
+    <label for="syllabus">Enter your assignments here:</label>
+    <textarea id = "syllabus" rows="10" cols="10"></textarea>
+    <label for="apikey">Enter your gemini api key:</label>
+    <input type="text" id="apikey" name = "apikey">
+
+<button id="api-help-button" type="button">What's an api key?</button>
+
+<p id="explanation" style="display: none;">Everyone has limited free gemini queries. Using your own 
+ api key uses your own gemini model, ensuring everyone can use this program. Find it 
+by googling "gemini get api key" and creating an api key on aistudio</p>
+
+<button id="next-button" type="button">Next</button>
+
+<script src="/static/dropdown.js"></script>
+<script src="/static/goToConfirmation.js"></script>
+</body>
+</html>

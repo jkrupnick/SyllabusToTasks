@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<body>
+   <h1> Confirm Tasks</h1>
+   <div id = "task-list"></div>
+   <script>
+      const tasks = JSON.parse(sessionStorage.getItem('parsedTasks') || '[]');
+      const taskList = document.getElementById('task-list');
+
+      if (tasks.length === 0) {
+         taskList.innerHTML = '<p>No tasks found. Please go back and enter your syllabus.</p>';
+      } else {
+         taskList.innerHTML = tasks.map((task, index) => `
+            <div>
+               <input type = "text" id = "title-${index}" value = "${task.title || ''}" placeholder = "Task title">
+               if (task.due) {
+                  <input type="datetime-local" id="due-${index}" value="${(task.due || '').slice(0,16)}">
+               } else {
+                  <input type="datetime-local" id="due-${index}">
+               }
+               <input type="datetime-local" id="due-${index}" value="${(task.due || '').slice(0,16)}">
+            </div>
+         `).join('');
+      }
+   </script>
+   <script src="/static/confirmationHandler.js"></script>
+   <button id="save-button">Save to Google Tasks</button>
+</body>
+
+</html>

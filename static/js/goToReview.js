@@ -1,4 +1,4 @@
-async function goToConfirmation() {
+async function goToReview() {
     const syllabus = document.getElementById('syllabus').value;
     const apikey = document.getElementById('apikey').value;
 
@@ -16,9 +16,9 @@ async function goToConfirmation() {
         }
 
         const data = await response.json();
-        // Store the parsed tasks in sessionStorage to access them on the confirmation page
+        // Store the parsed tasks in sessionStorage to access them on the review page
         sessionStorage.setItem('parsedTasks', JSON.stringify(data.tasks || []));
-        window.location.href = '/confirmation';
+        window.location.href = '/review';
     } catch (error) {
         console.error(error);
         alert('Could not process the syllabus. Check your API key and try again.');
@@ -28,6 +28,6 @@ async function goToConfirmation() {
 document.addEventListener('DOMContentLoaded', () => {
     const nextButton = document.getElementById('next-button');
     if (nextButton) {
-        nextButton.addEventListener('click', goToConfirmation);
+        nextButton.addEventListener('click', goToReview);
     }
 });

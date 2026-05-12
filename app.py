@@ -14,12 +14,17 @@ class SyllabusRequest(BaseModel): #the input we will need to parse
 
 @app.get("/", response_class=HTMLResponse)
 async def root():
-    with open("index.html","r")as f:
+    with open("templates/index.html","r")as f:
+        return f.read()
+    
+@app.get("/review",response_class=HTMLResponse)
+async def review():
+    with open("templates/review.html","r") as f:
         return f.read()
     
 @app.get("/confirmation",response_class=HTMLResponse)
 async def confirmation():
-    with open("confirmation.html","r") as f:
+    with open("templates/confirmation.html","r") as f:
         return f.read()
     
 @app.post("/parse-syllabus")

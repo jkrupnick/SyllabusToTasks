@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title> Confirmation </title>
+        <link rel="stylesheet" href="/static/css/style.css">
+        <link rel="stylesheet" href="/static/css/confirmation.css">
+    </head>
+    <body>
+        <h1> Your tasks have been saved to Google Tasks! </h1>
+
+        <section id="success-section">
+            <h2>Successful</h2>
+            <ul id="success-list"></ul>
+        </section>
+
+        <section id="failed-section" style="display:none">
+            <h2>Failed</h2>
+            <ul id="failed-list"></ul>
+        </section>
+
+        <div id="no-results" style="display:none">
+            <p>No save results available. Go back and try saving again.</p>
+        </div>
+
+        <script>
+            const resultsRaw = sessionStorage.getItem('saveResults');
+            const successList = document.getElementById('success-list');
+            const failedList = document.getElementById('failed-list');
+            const noResults = document.getElementById('no-results');
+
+            if (!resultsRaw) {
+                noResults.style.display = 'block';
+            } else {
+                try {
+                    const results = JSON.parse(resultsRaw);
+                    const created = results.created || [];
+                    const failed = results.failed || [];
+
+                    if (created.length === 0) {
+                        const li = document.createElement('li');
+                        li.textContent = 'No tasks were created.';
+                        successList.appendChild(li);
+                    } else {
+                        created.forEach(item => {
+                            const li = document.createElement('li');
+                            // if the task object has a title or id, show useful text
+                            li.textContent = item.title || item.id || JSON.stringify(item);
+                            successList.appendChild(li);
+                        });
+                    }
+
+                    if (failed.length > 0){
+                        failedList.style.display = 'block';
+                        failed.forEach(obj => {
+                            const li = document.createElement('li');
+                            // show title and error if present
+                            const t = (obj.task && obj.task.title) ? obj.task.title : JSON.stringify(obj.task);
+                            li.textContent = `${t} — ${obj.error || 'unknown error'}`;
+                            failedList.appendChild(li);
+                        });
+                    }
+                } catch (e) {
+                    noResults.style.display = 'block';
+                }
+            }
+        </script>
+        
+        <button id="home-button">Process Another Syllabus</button>
+        <script>
+            const homeButton = document.getElementById('home-button');
+                homeButton.addEventListener('click', () => {
+                    window.location.href = '/';
+                });
+        </script>
+    </body>
+</html>

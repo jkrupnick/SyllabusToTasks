@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang = "en">
+<head>
+   <title> Review Tasks </title>
+   <link rel="stylesheet" href="/static/css/style.css">
+   <link rel="stylesheet" href="/static/css/review.css">
+</head>
+<body>
+   <h1> Review Tasks</h1>
+   <div class="header-row">
+      <h3> Title </h3>
+      <h3> Due Date </h3>
+   </div>
+   <div id = "task-list"></div>
+   <script>
+      const tasks = JSON.parse(sessionStorage.getItem('parsedTasks') || '[]');
+      const taskList = document.getElementById('task-list');
+
+      if (tasks.length === 0) {
+         taskList.innerHTML = '<p>No tasks found. Please go back and enter your syllabus.</p>';
+      } else {
+         taskList.innerHTML = tasks.map((task, index) => `
+            <div class="task-row">
+               <input type = "text" id = "title-${index}" value = "${task.title || ''}" placeholder = "Task title" class="${!task.title ? 'missing-title' : ''}">
+               <input type="datetime-local" id="due-${index}" value="${(task.due || '').slice(0,16)}" class="${!task.due ? 'missing-due' : ''}">
+            </div>
+         `).join('');
+         
+         // Add event listeners to remove red border when user fills in fields
+         for (let i = 0; i < tasks.length; i++) {
+            const titleInput = document.getElementById(`title-${i}`);
+            const dueInput = document.getElementById(`due-${i}`);
+            
+            titleInput.addEventListener('input', (e) => {
+               if (e.target.value) {
+                  e.target.classList.remove('missing-title');
+               } else {
+                  e.target.classList.add('missing-title');
+               }
+            });
+            
+            dueInput.addEventListener('input', (e) => {
+               if (e.target.value) {
+                  e.target.classList.remove('missing-due');
+               } else {
+                  e.target.classList.add('missing-due');
+               }
+            });
+         }
+      }
+   </script>
+   <script src="/static/js/reviewHandler.js"></script>
+   <button id="save-button">Save to Google Tasks</button>
+</body>
+
+</html>

@@ -40,4 +40,13 @@ async function handleSave() {
     });
     const results = await response.json();
     console.log('Response from server:', results);
+
+    // save results to sessionStorage and navigate to confirmation page
+    try {
+        sessionStorage.setItem('saveResults', JSON.stringify(results || {}));
+    } catch (e) {
+        console.warn('Could not save results to sessionStorage', e);
+    }
+    // navigate to confirmation page to display read-only results
+    window.location.href = '/confirmation';
 }

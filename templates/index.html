@@ -1,7 +1,8 @@
 <!DOCTYPE html>
-<html>
+<html lang = "en">
 <head>
    <title> Syllabus to Google Tasks</title>
+   <link rel="stylesheet" href="/static/css/style.css">
 </head>
 <body>
     <h1>Syllabus to Google Tasks</h1>
@@ -12,13 +13,15 @@
 
 <button id="api-help-button" type="button">What's an api key?</button>
 
-<p id="explanation" style="display: none;">Everyone has limited free gemini queries. Using your own 
- api key uses your own gemini model, ensuring everyone can use this program. Find it 
-by googling "gemini get api key" and creating an api key on aistudio</p>
-
 <button id="next-button" type="button">Next</button>
 
-<script src="/static/dropdown.js"></script>
-<script src="/static/goToConfirmation.js"></script>
+
+<p id="explanation" style="display: none;" class="explanation">Using an api key uses a personal <strong>free</strong> version
+of the AI model. You can get your api key <a href="https://aistudio.google.com/app/api-keys" target="_blank" rel="noopener noreferrer">here</a> by clicking "Create API Key". </p>
+
+
+
+<script src="/static/js/dropdown.js"></script>
+<script src="/static/js/goToReview.js"></script>
 </body>
 </html>

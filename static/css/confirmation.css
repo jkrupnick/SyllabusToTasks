@@ -1,0 +1,4 @@
+body { font-family: system-ui, -apple-system, sans-serif; padding: 20px; }
+#success-section, #failed-section { margin-top: 20px; }
+#success-list li { color: green; }
+#failed-list li { color: red; }

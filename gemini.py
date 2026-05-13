@@ -1,4 +1,3 @@
-import tasks
 import json
 from datetime import datetime
 from datetime import timezone
@@ -10,14 +9,10 @@ import google.generativeai as genai
 
 
 def ParseSyllabus(syllabus, apikey):
-    creds = tasks.getCredentials()
-    service = tasks.getService(creds) #instance of service
     current_year = datetime.now().year
     
 
     try:
-        #check if token.json is created.
-        tasks.getCredentials() #google login 
         api_key = apikey.strip()
         syllabus = syllabus.strip()
         genai.configure(api_key=api_key) #create gemini client
@@ -82,26 +77,6 @@ def ParseSyllabus(syllabus, apikey):
             else:
                 task['due'] = None
         return parsed
-        # created = []
-        # failed = []
-        # for task in parsed:
-        #     title = task.get('title', 'Untitled')
-        #     try:
-                
-        #         due = task.get('due')
-
-        #         if due:
-        #             dt = datetime.fromisoformat(due.replace('Z', '+00:00'))
-        #             due = dt.astimezone(timezone.utc).strftime('%Y-%m-%dT%H:%M:00.000Z')
-        #         result = tasks.addTask(service, title=title, due=due)
-        #         created.append(result)
-        #     except Exception as e:
-        #         failed.append({
-        #             "title": title,
-        #             "error": str(e)
-        #         })
-        #         print(f"Failed to create task '{title}': {e}")
-        # return {"created": created, "failed": failed}
     except HttpError as err:
         print("Google api error" + err)
         return parsed

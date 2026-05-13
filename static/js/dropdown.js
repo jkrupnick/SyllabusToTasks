@@ -1,6 +1,6 @@
 function dropdown(){
     const text = document.getElementById('explanation')
-    text.style.display = 'block'
+    text.style.display = text.style.display === 'none' ? 'block' : 'none'
 }
 
 document.addEventListener('DOMContentLoaded', () => {

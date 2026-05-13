@@ -1,18 +1,43 @@
 async function goToReview() {
     const syllabus = document.getElementById('syllabus').value;
     const apikey = document.getElementById('apikey').value;
+    const fileInput = document.getElementById('syllabus-file');
+    const file = fileInput && fileInput.files && fileInput.files[0];
+
+    if (!apikey) {
+        alert('Please enter an API key');
+        return;
+    }
 
     try {
-        const response = await fetch('/parse-syllabus', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ syllabus, apikey })
-        });
+        let response;
+
+        if (file) {
+            // upload PDF via multipart/form-data
+            const formData = new FormData();
+            formData.append('apikey', apikey);
+            formData.append('file', file, file.name);
+
+            response = await fetch('/parse-syllabus-file', {
+                method: 'POST',
+                body: formData
+            });
+        } else {
+            if (!syllabus) {
+                alert('Please enter a syllabus or upload a PDF.');
+                return;
+            }
+            response = await fetch('/parse-syllabus', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ syllabus, apikey })
+            });
+        }
 
         if (!response.ok) {
-            throw new Error('Failed to parse syllabus');
+            throw new Error(`Server error: ${response.status}`);
         }
 
         const data = await response.json();

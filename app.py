@@ -3,6 +3,9 @@ from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 from gemini import ParseSyllabus
+from fastapi import File, UploadFile, Form
+import io
+import pdfplumber
 import tasks
 
 app = FastAPI()
@@ -30,6 +33,28 @@ async def confirmation():
 @app.post("/parse-syllabus")
 async def parseSyllabus(request: SyllabusRequest):
     parsedJson = ParseSyllabus(request.syllabus,request.apikey)
+    return {"tasks": parsedJson}
+
+
+@app.post('/parse-syllabus-file')
+async def parse_syllabus_file(apikey: str = Form(...), file: UploadFile = File(...)):
+    # only accept PDFs for now
+    try:
+        data = await file.read()
+        text_parts = []
+        # use pdfplumber to extract text from the PDF
+        with pdfplumber.open(io.BytesIO(data)) as pdf:
+            for page in pdf.pages:
+                try:
+                    txt = page.extract_text() or ''
+                except Exception:
+                    txt = ''
+                text_parts.append(txt)
+        syllabus_text = '\n'.join(text_parts)
+    except Exception:
+        syllabus_text = ''
+
+    parsedJson = ParseSyllabus(syllabus_text, apikey)
     return {"tasks": parsedJson}
 
 @app.post("/save-tasks")

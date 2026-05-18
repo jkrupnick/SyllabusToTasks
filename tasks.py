@@ -1,37 +1,30 @@
-import os.path
-import json 
+import os 
 
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
-from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
+
 SCOPES = ["https://www.googleapis.com/auth/tasks"]
+
 def getCredentials():
-    creds = None
-    # Check for stored token
-    if os.path.exists("token.json"):
-        creds = Credentials.from_authorized_user_file("token.json", SCOPES)
-    # Log in 
-    if not creds or not creds.valid:
-        try:
-            if creds and creds.expired and creds.refresh_token:
-                creds.refresh(Request())
-            else:
-                raise Exception("No valid refresh token")
-        except Exception:
-            #force re-auth refresh failed
-            if os.path.exists("token.json"):
-                os.remove("token.json")
-            flow = InstalledAppFlow.from_client_secrets_file(
-            "credentials.json", SCOPES)
-            creds = flow.run_local_server(port=0)
-        # Save creds
-    
-        with open("token.json", "w") as token:
-            token.write(creds.to_json())
-    #these creds used for building service
+    client_id = os.environ["GOOGLE_CLIENT_ID"]
+    client_secret = os.environ["GOOGLE_CLIENT_SECRET"]
+    refresh_token = os.environ["GOOGLE_REFRESH_TOKEN"]
+
+    if not client_secret or not client_id or not refresh_token:
+        raise RuntimeError("Missing Google OAuth environment variables.")
+    creds = Credentials(
+        token=None,
+        refresh_token=refresh_token,
+        token_uri="https://oauth2.googleapis.com/token",
+        client_id=client_id,
+        client_secret=client_secret,
+        scopes=SCOPES,
+    )
+    creds.refresh(Request())
     return creds
+
 
 def getService(creds):
     return build("tasks","v1",credentials=creds)
